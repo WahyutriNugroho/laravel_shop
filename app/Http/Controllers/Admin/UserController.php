@@ -124,15 +124,13 @@ class UserController extends Controller
 
         $item = ModelsUser::findOrFail($id);
 
-        if($request->password && $request->email)
+        if($request->password)
         {
             $data['password'] =  bcrypt($request->password);
-            $data['email'] =  $request->email;
         }
         else 
         {
             unset($data['password']);
-            unset($data['email']);
         }
 
         $item->update($data);
