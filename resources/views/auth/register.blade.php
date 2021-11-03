@@ -7,18 +7,36 @@
         <div class="row align-item-center row-login justify-content-center">
          <div class="col-lg-4">
         <h2>Memulai jual beli dengan lebih mudah</h2>
-        <form action="" class="mt-3">
+        <form method="POST" action="{{ route('register') }}">
+          @csrf
           <div class="form-group">
             <label for="text">Full Name</label>
-            <input type="text" class="form-control is-valid" v-model="name" autofocus name="text" id="text">
+            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+            @error('name')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
           </div>
           <div class="form-group">
             <label for="email">Email Address</label>
             <input type="email" class="form-control is-invalid" v-model="email" name="email" id="email">
+            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+            @error('email')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+            @enderror
           </div>
           <div class="form-group">
             <label for="password">Password Address</label>
             <input type="password" class="form-control" name="pasword" id="pasword">
+            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+            @error('password')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+            @enderror
           </div>
           <div class="form-group">
             <label for="text">Store</label>

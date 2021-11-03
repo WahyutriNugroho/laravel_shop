@@ -12,17 +12,25 @@
         </div>
          <div class="col-lg-5">
         <h2>Belanja Kebutuhan anda lebih mudah</h2>
-        <form action="" class="mt-3">
+        <form method="POST" action="{{ route('login') }}" class="mt-3">
+            @csrf
           <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" class="w-75 form-control" name="email" id="email" autofocus>
+            <input id="email" type="email" class="form-control w-75 @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                @error('email')
+                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                @enderror
           </div>
           <div class="form-group">
             <label for="password">Password Address</label>
-            <input type="password" class="w-75 form-control" name="pasword" id="pasword">
+            <input id="password" type="password" class="form-control w-75 @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+
+            @error('password')
+                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+            @enderror
           </div>
-          <a href="/dashboard.html" class="btn btn-success btn-block w-75" >Sign in </a>
-          <a href="/register.html" class="btn btn-secondary btn-block w-75" >Sign up</a>
+          <button type="submit" href="{{route('dashboard')}}" class="btn btn-success btn-block w-75" >Sign in </button>
+          <a href="{{route('register')}}" class="btn btn-secondary btn-block w-75" >Sign up</a>
         </form>
       </div>
       </div>
