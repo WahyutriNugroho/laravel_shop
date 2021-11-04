@@ -30,7 +30,7 @@
       </section>
       <!-- End Breadcrumb -->
       <!-- Gallery -->
-      <section class="store-gallery" id="gallery">
+      <section class="store-gallery mb-3" id="gallery">
         <div class="container">
           <div class="row">
             <div class="col-lg-8" data-aos="zoom-in">
@@ -73,14 +73,23 @@
           <div class="container">
             <div class="row">
               <div class="col-lg-8">
-                <h1>Sofa Ternyaman</h1>
-                <div class="owner">By Nadia</div>
-                <div class="price">$159</div>
+                <h1>{{$product->name}}</h1>
+                <div class="owner">By {{$product->user->store_name}}</div>
+                <div class="price">${{number_format($product->price)}}</div>
               </div>
               <div class="col-lg-2" data-aos="fade-in">
-                <a href="/cart.html" class="btn btn-success px-4 text-white btn-block mb-3">
+                @auth
+                <form action="" method="POST" enctype="multipart/form-data">
+                  @csrf
+                <button  type="submit" class="btn btn-success px-4 text-white btn-block mb-3">
                   Add To Cart
+                </button>
+                </form>
+                @else
+                <a href="{{route('login')}}" class="btn btn-success px-4 text-white btn-block mb-3">
+                  Sign In To Add
                 </a>
+                @endauth
               </div>
             </div>
           </div>
@@ -91,8 +100,7 @@
         <div class="container">
           <div class="row">
             <div class="col-12 col-lg-8">
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde soluta nisi rem dignissimos similique nostrum nihil magnam aperiam accusamus iure sequi harum, aspernatur omnis nemo, dicta nulla laborum voluptatem natus?</p>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam ea, laudantium officiis sequi sed ex id magni temporibus consequatur odio quo nihil veniam numquam doloremque nemo modi ratione nulla itaque!</p>
+              {{$product->description}}
             </div>
           </div>
         </div>
@@ -146,24 +154,14 @@
           AOS.init();
         },
         data: {
-          activePhoto: 3,
+          activePhoto: 0,
           photos: [
+            @foreach($product->galleries as $gallery )
             {
-              id: 1,
-              url: "/images/product-details-1.jpg",
+              id: {{ $gallery->id}},
+              url: "{{Storage::url($product->photos)}}",
             },
-            {
-              id: 2,
-              url: "/images/product-details-2.jpg",
-            },
-            {
-              id: 3,
-              url: "/images/product-details-3.jpg",
-            },
-            {
-              id: 4,
-              url: "/images/product-details-4.jpg",
-            },
+            @endforeach
           ],
         },
         methods: {
