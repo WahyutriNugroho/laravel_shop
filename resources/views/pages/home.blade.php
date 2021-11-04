@@ -113,15 +113,23 @@
                                     <div
                                     class="products-image"
                                     style="
-                                        @if($product->galleries->count())
-                                            background-image: url('{{ Storage::url($product->galleries->first()->photos) }}');
+                                            @if($product->galleries->count())
+                                                background-image: url('{{ Storage::url($product->galleries->first()->photos) }}');
+                                            @else
+                                                background-color: #eee;
+                                            @endif
+                                        "
+                                        >
+                                        {{-- @if ($productGallery->count())
+                                            <img src="{{ Storage::url($productGallery->first()->photos) }}" alt="">
                                         @else
-                                            background-color: #eee;
-                                        @endif
-                                    "
-                                    ></div>
+                                            <img src="https://images.unsplash.com/photo-1536566482680-fca31930a0bd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Z3JleXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60" alt=""> 
+                                        @endif --}}
+                                    </div>
                                 </div>
-                                <img src="{{ Storage::url($product->galleries->first()->photos) }}" width="w-100" alt="">
+                                <div class="image-thumbnail">
+                                    <img src="{{ Storage::url($productGallery->first()->photos) }}" alt="">
+                                </div>
                                 <div class="products-text">
                                     {{  $product->name }}
                                 </div>

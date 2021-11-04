@@ -22,6 +22,11 @@ class User extends Authenticatable
         'email',
         'password',
         'roles',
+
+        // addon
+        'store_name',
+        'store_status',
+        'categories_id',
     ];
 
     /**

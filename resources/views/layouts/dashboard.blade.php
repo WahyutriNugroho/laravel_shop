@@ -110,7 +110,7 @@
                         >Settings</a
                       >
                       <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="/">Logout</a>
+                      <a class="dropdown-item" href="{{route('logout')}}">Logout</a>
                     </div>
                   </li>
                   <li class="nav-item">

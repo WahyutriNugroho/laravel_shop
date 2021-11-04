@@ -11,7 +11,7 @@
           @csrf
           <div class="form-group">
             <label for="text">Full Name</label>
-            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+            <input id="name" type="text" v-model="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
             @error('name')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -20,8 +20,7 @@
           </div>
           <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" class="form-control is-invalid" v-model="email" name="email" id="email">
-            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+            <input id="email" type="email" v-model="email" @change="checkforEmailAvalability()" :class="{'is-invalid' : this.email_unavaliable}" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
             @error('email')
               <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -29,10 +28,18 @@
             @enderror
           </div>
           <div class="form-group">
-            <label for="password">Password Address</label>
-            <input type="password" class="form-control" name="pasword" id="pasword">
+            <label for="password">Password </label>
             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
             @error('password')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+            @enderror
+          </div>
+          <div class="form-group">
+            <label for="password_confirmation">Password Confirm</label>
+            <input id="password_confirmation" type="password" class="form-control @error('password') is-invalid @enderror" name="password_confirmation" required autocomplete="new-password">
+            @error('password_confirmation')
               <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
               </span>
@@ -52,16 +59,24 @@
           </div>
           <div class="form-group" v-if="is_store_open">
             <label for="text">Nama Toko</label>
-            <input type="text" class="form-control is-valid" autofocus name="text" id="text">
+            <input type="text" v-model="store_name" id="store_name" name="store_name" class="form-control @error('password') is-invalid @enderror" required autocomplete autofocus>
+             @error('store_name')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+            @enderror
           </div>
           <div class="form-group" v-if="is_store_open">
             <label for="text">Kategori</label>
-            <select name="category" class="form-control">
+            <select name="categories_id" class="form-control">
               <option value="" disabled>Select Kategory</option>
+              @foreach ($categories as $category)
+                  <option value="{{$category->id}}">{{$category->name}}</option>
+              @endforeach
             </select>
           </div>
-          <a href="/dashboard.html" class="btn btn-success btn-block  " >Sign up Now </a>
-          <a href="/login.html" class="btn btn-secondary btn-block  " >Back to Sign In</a>
+          <button type="submit"class="btn btn-success btn-block" :disabled="this.email_unavaliable" >Sign up Now </button>
+          <a href="{{route('login')}}" class="btn btn-secondary btn-block" >Back to Sign In</a>
         </form>
       </div>
       </div>
@@ -69,6 +84,8 @@
      </div>
       </div>
    </div>
+
+   {{-- template lama --}}
 <div class="container" style="display: none" >
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -122,10 +139,10 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+                            <label for="password_confirmation" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                                <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
                         </div>
 
@@ -147,6 +164,7 @@
 @push('addon-script')
         <script src="/vendor/vue/vue.js"></script>
       <script src="https://unpkg.com/vue-toasted"></script>
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
       <script>
         Vue.use(Toasted);
 
@@ -154,24 +172,56 @@
           el: '#register',
           mounted(){
             AOS.init();
-            this.$toasted.error(
-              'Eror Hayoloho',
-              {
-                position:"top-center" ,
-                className : "rounded",
-                duration: 1000
-              }
-              
-            );
+            
 
           },
-          data:{
-            name:"Nadia Annisa",
-            email:"Nadia.Annisa@gmail.com",
-            password:"",
-            is_store_open:true,
-            store_name:""
-          },
+          methods:{
+            checkforEmailAvalability() : function () {
+              var self = this;
+              // Make a request for a user with a given ID
+              axios.get('{{route('api.register.check')}}',{
+                params:{
+                  email:this.email
+                },
+              })
+                .then(function (response) {
+                  if(response.data == 'Avaliable'){
+                      self.$toasted.show(
+                        'Email anda bisa digunakan. Silahkan lanjut ke step selanjutnya',
+                        {
+                          position:"top-center" ,
+                          className : "rounded",
+                          duration: 1000
+                        }
+                      );
+                    self.email_unavaliable = false;
+                  }else{
+                      self.$toasted.error(
+                        'Eror Hayoloho',
+                        {
+                          position:"top-center" ,
+                          className : "rounded",
+                          duration: 1000
+                        }
+                      );
+                       self.email_unavaliable = true;
+                  }
+
+
+                  // handle success
+                  console.log(response);
+                })
+            },
+          } ,
+          data:(
+            return {
+              name:"Nadia Annisa",
+              email:"Nadia.Annisa@gmail.com",
+              is_store_open:true,
+              store_name:"",
+              email_unavaliable : false
+           },
+          ),
         })
       </script>
 @endpush

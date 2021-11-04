@@ -56,7 +56,7 @@
               class= "list-group-item list-group-item-action {{(request()->is('admin/user*')) ? 'active' : ''}}"
               >Users</a
             >
-            <a href="{{route('home')}}" class="list-group-item list-group-item-action"
+            <a href="{{route('logout')}}" class="list-group-item list-group-item-action"
               >Sign Out</a
             >
           </div>

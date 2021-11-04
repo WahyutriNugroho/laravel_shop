@@ -18,12 +18,12 @@ class HomeController extends Controller
     {
         $categories = ModelsCategory::take(6)->get();
         $products = ModelsProduct::with('galleries')->take(8)->get();
-        // $productGallery = ProductGallery::take(8)->get();
+        $productGallery = ProductGallery::take(8)->get();
 
         return view('pages.home',[
             'categories' => $categories,
             'products' => $products,
-            // 'productGallery' => $productGallery,
+            'productGallery' => $productGallery,
         ]);
     }
 }
